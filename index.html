@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <div class="container_body">
+
+
+            <nav>
+                <button data-target="slide-out" class="sidenav-trigger" id="usu"><i id="usuario"
+                        class="material-icons">account_circle</i></button>
+            </nav>
+
+        
+            <nav>
+                <div class="nav-wrapper">
+                  <form>
+                    <div class="input-field">
+                      <input @keyup="filter_planta()" v-model="search"  id="search" type="search" required>
+                      <label class="label-icon" for="search"><i class="material-icons">search</i></label>
+                      <i class="material-icons">close</i>
+                    </div>
+                  </form>
+                </div>
+              </nav>
+            <main>
+                <div id="container_main">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>image</th>
+                                <th>Documento</th>
+                                <th>Nombre</th>
+                                <th>Cargo</th>
+                                <th>Salario</th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+
+                        <tbody v-for="p in lista_planta">
+                            <tr>
+                                <td>
+                                    <img id="img" class="materialboxed" width="550"
+                                        :src="'images/imagen'+p.image+'.jpg'">
+                                </td>
+                                <td>C.C.{{p.document}}</td>
+                                <td>{{p.name}}</td>
+                                <td>{{p.charge}}</td>
+                                <td>${{p.salary}}</td>
+                                <td>
+                                    <!-- Dropdown Trigger -->
+                                    <a class='dropdown-trigger btn' :href="'#dropdown1'+p.id" id="menu"> <i
+                                            class="material-icons">menu</i></a>
+                                </td>
+                                <td>
+                                    <!-- Dropdown Edi-Eli -->
+                                    <ul :id="'dropdown1'+p.id" class='dropdown-content'>
+
+                                        <a @click="edit(p)" class="waves-effect waves-light btn " id="eli-edi">
+                                            <i class="material-icons">create</i></a>
+
+                                        <a @click="delete_planta(p)" class="waves-effect waves-light btn modal-trigger"
+                                            href="#eliminar" id="eli-edi">
+                                            <i class="material-icons">delete_sweep</i></a>
+
+                                    </ul>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
+
+            <!-- Modal Nuevo -->
+            <div class="fixed-action-btn">
+                <a @click="create()" class="waves-effect waves-light btn modal-trigger" href="#nuevo" id="nue">
+                    <i class="large material-icons" id="mas">add_to_photos</i></a>
+                </a>
+            </div>
+
+            <!-- Modal Editar -->
+            <div id="editar" class="modal">
+                <div class="modal-content">
+                    <h4>EDITAR DATOS</h4>
+
+                    <div class="input-field col s6" class="editar">
+                        <input id="document" type="text" class="validate" v-model="edit_planta.document">
+                        <label for="document">Documento</label>
+                    </div>
+                    <div class="input-field col s6" class="editar">
+                        <input id="name" type="text" class="validate" v-model="edit_planta.name">
+                        <label for="name">Nombre</label>
+                    </div>
+                    <div class="input-field col s6" class="editar">
+                        <input id="charge" type="text" class="validate" v-model="edit_planta.charge">
+                        <label for="charge">Cargo</label>
+                    </div>
+                    <div class="input-field col s6" class="editar">
+                        <input id="salary" type="text" class="validate" v-model="edit_planta.salary">
+                        <label for="salary">Salario</label>
+                    </div>
+                    <div class="input-field col s6" class="editar">
+                        <input id="image" type="text" class="validate" v-model="edit_planta.image">
+                        <label for="image">foto</label>
+
+                    </div>
+
+                    <div class="modal-footer">
+                        <a @click="update()" href="#!" class="modal-close waves-effect waves-green btn-flat">Guardar
+                            Cambios</a>
+                        <a @click="cancel_modal()" href="#!"
+                            class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Nuevo -->
+            <div id="nuevo" class="modal">
+                <div class="modal-content">
+                    <h4>NUEVO TRABAJADOR</h4>
+
+                    <div class="input-field col s6" class="editar">
+                        <input name="document" type="text" class="validate" v-model="planta.document">
+                        <label for="document">Documento</label>
+                        <span class="error" v-if="errors.document">{{errors.document[0]}}</span>
+                    </div>
+                    <div class="input-field col s6" class="editar">
+                        <input name="name" type="text" class="validate" v-model="planta.name">
+                        <label for="name">Nombre</label>
+                        <span class="error" v-if="errors.name">{{errors.name[0]}}</span>
+                    </div>
+                    <div class="input-field col s6" class="editar">
+                        <input name="charge" type="text" class="validate" v-model="planta.charge">
+                        <label for="charge">Cargo</label>
+                        <span class="error" v-if="errors.charge">{{errors.charge[0]}}</span>
+                    </div>
+                    <div class="input-field col s6" class="editar">
+                        <input name="salary" type="text" class="validate" v-model="planta.salary">
+                        <label for="salary">Salario</label>
+                        <span class="error" v-if="errors.salary">{{errors.salary[0]}}</span>
+                    </div>
+                    <div class="input-field col s6" class="editar">
+                        <input name="image" type="text" class="validate" v-model="planta.image">
+                        <label for="image">foto</label>
+                        <span class="error" v-if="errors.image">{{errors.image[0]}}</span>
+                    </div>
+
+                    <div class="modal-footer">
+                        <a @click="store()" href="#!" class=" waves-effect waves-green btn-flat">Agregar</a>
+                        <a href="#!" class="modal-close waves-effect waves-green btn-flat">Cancelar</a>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Eliminar -->
+            <div id="eliminar" class="modal">
+                <div class="modal-content">
+
+                    <h4>DESEAS BORRAR ESTE TRABAJADOR</h4>
+
+                </div>
+                <div class="modal-footer">
+                    <a @click="destroy()" href="#!" class="modal-close waves-effect waves-green btn-flat">SI</a>
+                    <a href="#!" class="modal-close waves-effect waves-green btn-flat">NO</a>
+                </div>
+            </div>
+            <!-------------------modal usuario-------------->
+            <ul id="slide-out" class="sidenav">
+                <li>
+                    <div class="user-view">
+                        <div class="background">
+                            <img id="fondo" src="images/fondo.jpg">
+                        </div>
+                        <a href="#user"><img class="circle" src="images/usuario.jpg"></a>
+                        <a href="#name"><span class="white-text name">Juan Manuel</span></a>
+                        <a href="#email"><span class="white-text email">quiguamurciajuan@gmail.com</span></a>
+                    </div>
+                </li>
+                <!-- Modal mapa -->
+                <a class="waves-effect waves-light btn modal-trigger" href="#mapa" id="location"><i
+                        class="material-icons">location_on</i></a>
+                <!-- Modal iniciar sesion -->
+                <li><a class="waves-effect waves-light btn modal-trigger" href="#iniciar" id="sesion">INICIAR SESÍON</a>
+                </li>
+                <li>
+                    <div class="divider"></div>
+                </li>
+            </ul>
+            <!-- Modal iniciar sesion -->
+            <div id="iniciar" class="modal">
+                <div class="modal-content">
+                    <div class="row">
+                        <form class="col s12">
+                            <div class="row">
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">account_circle</i>
+                                    <input id="first_name" type="text" class="validate">
+                                    <label for="first_name">First Name</label>
+                                </div>
+                                <div class="input-field col s6">
+                                    <i class="material-icons prefix">account_circle</i>
+                                    <input id="last_name" type="text" class="validate">
+                                    <label for="last_name">Last Name</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix">lock</i>
+                                    <input id="password" type="password" class="validate">
+                                    <label for="password">Password</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <i class="material-icons prefix">markunread</i>
+                                    <input id="email" type="email" class="validate">
+                                    <label for="email">Email</label>
+                                </div>
+                            </div>
+
+                        </form>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <a href="#!" class="modal-close waves-effect waves-green btn-flat">INICIAR SESÍON</a>
+                </div>
+            </div>
+            <!-- Modal mapa -->
+            <div id="mapa" class="modal">
+                <div class="modal-content">
+                    <iframe
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3988.2556418359263!2d-75.58561328466956!3d1.6036517611527248!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e244e48314aaf5b%3A0xe700986a7a0ed62!2sSena%2C%20Florencia%2C%20Caquet%C3%A1!5e0!3m2!1ses!2sco!4v1650911197870!5m2!1ses!2sco"
+                        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> -->
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/vue@3"></script>
+    <script src="script.js"></script>
+
+</body>
+
+</html>

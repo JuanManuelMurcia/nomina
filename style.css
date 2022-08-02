@@ -1,0 +1,138 @@
+::-webkit-scrollbar {
+    display: none;
+}
+nav {
+    background: rgb(8, 179, 122);
+}
+
+#usuario {
+    display: flex;
+    color: #ffffff;
+    font-size: 2.5rem;
+    line-height: 2.6rem;
+    justify-content: center;
+
+}
+
+#usu {
+    background: rgb(8, 179, 122);
+    border: none;
+    width: 3.3rem;
+    height: 2.5rem;
+    margin-top: 1rem;
+    border-radius: 3px;
+
+}
+
+#fondo {
+    width: 20rem;
+}
+
+#mapa {
+    width: 43rem;
+
+
+}
+
+#location {
+    background: rgb(8, 179, 122);
+    margin: 10px;
+}
+
+#sesion {
+    background: rgb(8, 179, 122);
+}
+
+#editar {
+    width: 40rem;
+    height: 35rem;
+}
+
+#nuevo {
+    width: 40rem;
+    height: 35rem;
+    ;
+}
+
+#eliminar {
+    width: 30rem;
+    height: 13rem;
+    color: red;
+}
+
+#dropdown1 {
+    height: 6.2rem;
+    width: 50rem;
+}
+
+#eli-edi {
+    margin: 5px;
+    margin-left: 24px;
+}
+
+#nue {
+    border-radius: 100%;
+    width: 4rem;
+    height: 4rem;
+    background: rgb(8, 179, 122);
+}
+
+#mas {
+    display: flex;
+    font-size: 2.4rem;
+    justify-content: center;
+    line-height: 4rem;
+}
+
+#menu {
+    background: rgb(8, 179, 122);
+}
+
+#img {
+    width: 6.5rem;
+    height: 6.5rem;
+    margin: 0;
+} 
+
+.container_body {
+    display: flex;
+    flex-flow: column;
+    height: 100vh;
+    /* border: 5px solid yellow; */
+}
+
+main {
+    height: calc(100vh - 4.2rem);
+    /* border: 5px solid red; */
+    overflow: scroll;
+
+
+
+}
+
+#container_main {
+    display: flex;
+    flex-wrap: wrap;
+    /* border: 5px solid blue; */
+    height: max-content;
+
+}
+
+th {
+    position: sticky;
+    top: 0;
+    background-color: #fff;
+    z-index: 1000;
+}
+
+tbody:hover{
+    background-color: #e7e6e6;
+    color: red;
+
+}
+#slide-out{
+    z-index: 10000;
+}
+.error{
+    color: red;
+}
